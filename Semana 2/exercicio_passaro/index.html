@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <title>Exercício do Pássaro</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+
+    var config = 
+    {
+        type: Phaser.AUTO,
+
+        width: 800,
+
+        height: 600,
+
+        scene: 
+        {
+        preload: preload,
+
+        create: create,
+
+        update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+
+    var passarinho;
+
+    var watcher;
+
+    function preload() 
+    {
+        //Preload das imagens/spritesheets
+        
+        this.load.image('bg', 'assets/bg_space.png');
+
+        this.load.spritesheet('watcher', 'assets/bird-red.png', {frameWidth: 75, frameHeight: 75});
+
+        this.load.spritesheet('bird', 'assets/bird-purple.png', { frameWidth: 75, frameHeight: 75});
+    }
+
+    function create() 
+    {
+        //Cria o background, o passarinho, e o watcher
+        
+        this.add.image(400, 300, 'bg').setScale(1.2);
+
+        watcher = this.add.sprite(400, 300, 'watcher').setScale(1.3);
+
+        passarinho = this.add.sprite(100, 100, 'bird').setScale(1.3);
+
+       //Cria a animação de voar do passarinho
+       
+        this.anims.create
+        ({
+            key: 'fly',
+
+            frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 7}),
+
+            framerate: 10,
+
+            repeat: -1
+        });
+
+        //Cria a animação de voar do watcher
+
+        this.anims.create
+        ({
+            key: 'watcherFly',
+
+            frames: this.anims.generateFrameNumbers('watcher', { start: 0, end: 7}),
+
+            framerate: 10,
+
+            repeat: -1
+        });
+
+        //Inicia as animações do passarinho e do watcher
+        
+        passarinho.anims.play('fly', true);
+
+        watcher.anims.play('watcherFly', true);
+    }
+
+    function update() 
+    { 
+
+        //Movimento eixo Y
+
+        if (passarinho.y === 100) 
+        {
+            passarinho.idaY = true;
+        }
+        
+        if (passarinho.y < 500 && passarinho.idaY === true)
+        {
+            //O passarinho já sinalizou que ainda não chegou no destino, e que está na pronto para ir, logo sua posição aumenta em 5 no eixo y
+
+            console.log('O passarinho já sinalizou que ainda não chegou no destino, e que está na pronto para ir, logo sua posição aumenta em 5 no eixo y')
+
+            passarinho.y += 5;
+        }
+
+        if (passarinho.y === 500)
+        {
+            passarinho.idaY = false;
+        }
+
+        if (passarinho.y > 100 && passarinho.idaY === false)
+        {
+            //O passarinho já sinalizou que ainda não chegou no destino, e que está na pronto para voltar, logo sua posição diminui em 5 no eixo y
+
+            console.log('O passarinho já sinalizou que ainda não chegou no destino, e que está na pronto para voltar, logo sua posição diminui em 5 no eixo y')
+
+            passarinho.y -= 5;
+        }
+
+        //Movimento eixo X
+
+        if (passarinho.x === 100) 
+        {
+            passarinho.setFlip(false, false);
+
+            passarinho.idaX = true;
+        }
+        
+        if (passarinho.x < 700 && passarinho.idaX === true)
+        {
+            //O passarinho já sinalizou que ainda não chegou no destino, e que está na pronto para ir, logo sua posição aumenta em 5 no eixo x
+
+            console.log('O passarinho já sinalizou que ainda não chegou no destino, e que está na pronto para ir, logo sua posição aumenta em 5 no eixo x')
+
+            passarinho.x += 5;
+        }
+
+        if (passarinho.x === 700)
+        {
+            passarinho.setFlip(true, false);
+
+            passarinho.idaX = false;
+        }
+
+        if (passarinho.x > 100 && passarinho.idaX === false)
+        {
+            //O passarinho já sinalizou que ainda não chegou no destino, e que está na pronto para voltar, logo sua posição diminui em 5 no eixo x
+
+            console.log('O passarinho já sinalizou que ainda não chegou no destino, e que está na pronto para voltar, logo sua posição diminui em 5 no eixo x')
+
+            passarinho.x -= 5;
+        }
+
+        //Enquanto o passarinho estiver indo para o eixo X, o Watcher olhará para a direita
+
+        while (passarinho.idaX === true)
+        {
+            watcher.setFlip(false, false);
+
+            break
+        }
+
+       //Enquanto o passarinho não estiver indo para eixo X, o Watcher olhará para a esquerda
+       
+        while (passarinho.idaX === false)
+
+        {
+            watcher.setFlip(true, false);
+
+            break
+        }
+    }
+
+</script>
+
+</body>
+</html>
+
+
