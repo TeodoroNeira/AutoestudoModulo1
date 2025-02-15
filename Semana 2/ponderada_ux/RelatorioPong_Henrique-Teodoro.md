@@ -18,7 +18,7 @@ Na nossa nova proposta para o Pong, ele se passa em uma partida de sinuca, com o
 
 Concept Art:
 <p align="center">
-<img src="../assets/conceptArt.jpg">
+<img src="assets/conceptArt.jpg">
 </p>
 
 ---
@@ -27,7 +27,7 @@ Concept Art:
 
 Tela Digital:
 <p align="center">
-<img src="../assets/telaDigital.png">
+<img src="assets/telaDigital.png">
 </p>
 
 A concept art foi adaptada para o formato digital por meio da plataforma de design Canva. A mesa de sinuca, arena do jogo, foi srepresentada com um maior número de detalhes, deixando-a visualmente mais impactante. O uso de cores e formas foi pensado para dar um maior destaque para a ambientação de um bar, utilizando-se de elementos tipicamente presente neles.    
