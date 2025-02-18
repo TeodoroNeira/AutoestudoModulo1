@@ -1,0 +1,25 @@
+let media = 0;
+
+const prompt = require("readline-sync");
+
+for(let i = 0; i < 3; i++)
+{
+    funcaoMedia(parseFloat(prompt.question('Digite a nota:')));
+}
+
+function funcaoMedia(valor)
+{
+    media = valor + media;
+}
+
+media = media/3;
+
+if(media >= 7)
+    {
+        console.log('Você foi aprovado com a média: ', media.toFixed(2));
+    }
+    else
+    {
+        console.log('Você foi reprovado com a média: ', media.toFixed(2));
+    }
+    
