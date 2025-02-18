@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício do Alien</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <style> body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; } </style>
+</head>
+
+<body>
+    <script>
+        // As dimensões da tela do jogo são definidas.
+        const larguraJogo = 700;
+        const alturaJogo = 850;
+
+        // O Phaser é configurado, definindo o seu tamanho como o tamanho da tela do jogo.
+        const config = {
+            type: Phaser.AUTO,
+            width: larguraJogo,
+            height: alturaJogo,
+
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 300 }
+                }
+            },
+
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        // O jogo é iniciado de acordo com as configurações
+        const game = new Phaser.Game(config);
+
+        var alien;
+
+        var teclado;
+
+        var fogo;
+
+        var plataforma;
+
+        var moeda;
+
+        var pontuacao = 0;
+
+        var placar;
+
+        let arvore;
+
+        let coracao;
+
+        let randomizador = ['simples', 'bonus'];
+
+
+        function preload() {
+
+            //Preload das imagens
+
+            this.load.image('background', 'assets/bg.png');
+
+            this.load.image('player', 'assets/alienigena.png');
+
+            this.load.image('turbo_nave', 'assets/turbo.png');
+
+            this.load.image('plataforma_tijolo', 'assets/tijolos.png');
+
+            this.load.image('moeda', 'assets/moeda.png');
+
+            this.load.image('arvore', 'assets/arvore.png');
+
+            this.load.image('coracao', 'assets/coracao.png');
+        }
+
+        function create() {
+
+
+            // O background do jogo é adicionado
+
+            this.add.image(larguraJogo/2, alturaJogo/2, 'background');
+
+            // O sprite do fogo é adicionado, e colocado como invisível
+
+            fogo = this.add.sprite(0, 0, 'turbo_nave');
+
+            fogo.setVisible(false);
+
+            // O player é adicionado, e sua colisão com as bordas da tela
+
+            alien = this.physics.add.sprite(larguraJogo/2, 0, 'player');
+            
+            alien.setCollideWorldBounds(true);
+
+            // Os inputs do teclado passam a ser reconhecidos
+
+            teclado = this.input.keyboard.createCursorKeys();
+
+           // A plataforma é adicionada, e passa a haver colisão entre a mesma e o player 
+
+            plataforma = this.physics.add.staticImage(larguraJogo/2, alturaJogo/2, 'plataforma_tijolo');
+
+            this.physics.add.collider(alien, plataforma);
+
+            // A moeda é adicionada, além de suas colisões e bounce (quicar)
+
+            moeda = this.physics.add.sprite(larguraJogo/2, 0, 'moeda');
+
+            moeda.setCollideWorldBounds(true);
+
+            moeda.setBounce(0.7);
+
+            this.physics.add.collider(moeda, plataforma);
+
+            //O placar é adicionado, apresentando uma palavra, além da variável pontuacao
+
+            placar = this.add.text(50, 100, 'Pontuação:' + pontuacao, {fontSize: '45px', fill: '#495613'});
+
+            //Detecção da colisão entre o player e a moeda, deixando a moeda invisível e randomizando sua posição, além de atualizar o placar
+
+            this.physics.add.overlap(alien, moeda, function()
+            {
+                moeda.setVisible(false);
+
+
+                //A utilização da lista foi implementada como um randomizador. Caso o item 0 do array for escolhido, o placar aumentará em 1. Caso o item 1 for selecionado, o placar aumentará em 5
+
+                var selecionado = randomizador[Phaser.Math.RND.between(0, 1)];
+
+                if(selecionado == "simples")
+                {
+                    pontuacao +=1;
+                }
+
+                else if(selecionado == "bonus")
+                {
+                    pontuacao = pontuacao + 5;    
+                }
+
+                var posicaoMoeda_Y = Phaser.Math.RND.between(50, 650);
+
+                moeda.setPosition(posicaoMoeda_Y, 100);
+
+                placar.setText('Pontuação:' + pontuacao);
+
+                moeda.setVisible(true);
+                
+                
+            });
+
+            //Adiciona a árvore, e suas colisões
+
+            arvore = this.physics.add.staticImage(150, 705, 'arvore');
+
+            this.physics.add.collider(alien, arvore);
+
+            this.physics.add.collider(arvore, moeda);
+
+            
+
+            
+        }
+
+        function update() {
+
+            //Detecção dos inputs do teclado, gerando a movimentação do player
+
+            if (teclado.left.isDown)
+            {
+                alien.setVelocityX(-150);
+            }
+
+            else if (teclado.right.isDown)
+            {
+                alien.setVelocityX(150);
+            }
+
+            else 
+            {
+                alien.setVelocityX(0);
+            }
+
+            if (teclado.up.isDown)
+            {
+                alien.setVelocityY(-150);
+
+                ativarTurbo();
+            }
+            else 
+            {
+                semTurbo();
+            }
+            
+            fogo.setPosition(alien.x, alien.y + alien.height/2);
+        }
+
+        //Caso a movimentação do personagem não envolva a tecla para cima, a função semTurbo() é executada, caso contrário, a ativarTurbo() é
+
+        function ativarTurbo()
+        {
+            fogo.setVisible(true);
+        }
+
+        function semTurbo()
+        {
+            fogo.setVisible(false);
+        }
+
+    </script>
+</body>
+</html>
