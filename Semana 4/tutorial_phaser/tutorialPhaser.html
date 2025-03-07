@@ -1,0 +1,242 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Tutorial Phaser</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script> <!-- Adiciona o phaser no jogo -->
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript"> //  Define que aquilo que será escrito adiante está na linguagem Javascript
+
+//  Configs do Phaser
+
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 }, // Define a intensidade da gravidade. Permite que o player dê grandes saltos
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+//  Definição das variáveis
+
+var player;
+var stars;
+var bombs;
+var platforms;
+var cursors;
+var score = 0;
+var gameOver = false;
+var scoreText;
+
+var game = new Phaser.Game(config);
+
+function preload ()
+{
+
+    //  Preload das imagens
+
+    this.load.image('sky', 'assets/sky.png');
+    this.load.image('ground', 'assets/platform.png');
+    this.load.image('star', 'assets/star.png');
+    this.load.image('bomb', 'assets/bomb.png');
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 }); // Carrega a spritesheet do player, definindo as dimensões de cada sprite
+}
+
+function create ()
+{
+    //  Carrega o plano de fundo
+
+    this.add.image(400, 300, 'sky');
+
+    //  Determina que as plataformas tem colisão estática. Ou seja, o player não consegue passar por elas, nem movê-las
+
+    platforms = this.physics.add.staticGroup();
+
+    //  Criação do chão, sendo ele uma plataforma
+
+    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+
+    //  Criação das plataformas do jogo
+
+    platforms.create(600, 400, 'ground');
+    platforms.create(50, 250, 'ground');
+    platforms.create(750, 220, 'ground');
+
+    // Criação do player, colocando a ação da física nele.
+
+    player = this.physics.add.sprite(100, 450, 'dude');
+
+    // Adição de propriedades físicas no player, como bounce (quicar) e colidir com as bordas do mundo
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+
+    //  Adição das animações do player, por meio da spritesheet
+
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'turn',
+        frames: [ { key: 'dude', frame: 4 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    //  Cria a deteção de inputs do teclado
+
+    cursors = this.input.keyboard.createCursorKeys();
+
+    //  Cria o grupo das estrelas, adicionando uma a cada 70 pixels no eixo x, totalizando 12 estrelas
+
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 11,
+        setXY: { x: 12, y: 0, stepX: 70 }
+    });
+
+    //  Adiciona características para as estrelas criadas
+
+    stars.children.iterate(function (child) {
+
+        //  Cada estrela quicará em uma intensidade diferente, por meio da função Phaser.Math.FloatBetween, determinando um float randômico entre os valores propostos
+
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
+
+    //  Criação do grupo das bombas
+
+    bombs = this.physics.add.group();
+
+    //  Criação do placar
+
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+    //Adição das colisões entre os objetos da fase
+
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.collider(bombs, platforms);
+
+    // Verifica o contanto entre os players e os objetos (estrelas e bombas). Inicia uma função específica dependendo de qual item for colidido
+
+    this.physics.add.overlap(player, stars, collectStar, null, this);
+
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
+}
+
+function update ()
+{
+
+
+    if (gameOver) // Verifica se o jogo já acabou
+    {
+        return;
+    }
+
+    //Verifica se as setinhas foram pressionadas, adicionando a movimentação e animação correspondente
+
+    if (cursors.left.isDown)
+    {
+        player.setVelocityX(-160);
+
+        player.anims.play('left', true);
+    }
+    else if (cursors.right.isDown)
+    {
+        player.setVelocityX(160);
+
+        player.anims.play('right', true);
+    }
+    else
+    {
+        player.setVelocityX(0);
+
+        player.anims.play('turn');
+    }
+
+    if (cursors.up.isDown && player.body.touching.down)
+    {
+        player.setVelocityY(-330);
+    }
+}
+
+function collectStar (player, star)
+{
+
+    // Desabilita a estrela que entrou em contato com o player
+
+    star.disableBody(true, true);
+
+    //  Aumenta e atualiza o placar
+
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+    if (stars.countActive(true) === 0)
+    {
+        //  Adiciona novas estrelas caso todas tenham sido coletadas
+
+        stars.children.iterate(function (child) {
+
+            child.enableBody(true, child.x, 0, true, true);
+
+        });
+
+        //  Verifica a posição do player, definindo as coordenadas possíveis para a bomba ser criada
+
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        // Uma nova bomba é criada sempre que o player coletar todas as estrelas do mapa
+
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        bomb.allowGravity = false;
+
+    }
+}
+
+function hitBomb (player, bomb) //  Caso o player colida com a bomba, ele muda de cor e o jogo acaba
+{
+    this.physics.pause();
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
+
+    gameOver = true;
+}
+
+</script>
+
+</body>
+</html>
