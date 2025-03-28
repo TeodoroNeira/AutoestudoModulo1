@@ -42,7 +42,7 @@ console.log("O produto dos valores é:", produto);
 
 Qual das seguintes alternativas melhor descreve o que o código faz?
 
-**A) O código avalia a expressão booleana, imprime `true`, calcula o produto dos números na lista e imprime o resultado no console.**
+**A) O código avalia a expressão booleana, imprime `true`, calcula o produto dos números na lista e imprime o resultado no console.** (CORRETA)
 
 B) O código avalia a expressão booleana, imprime `false`, calcula o produto dos números na lista e imprime o resultado no console.
 
@@ -108,7 +108,7 @@ function analisarCredito2() {
 
 Se ambas as funções forem executadas com os valores fornecidos, qual será a saída exibida no console?
 
-**A) Ambas as funções exibirão: 'Seu crédito foi aprovado. Saldo disponível: 400.'**
+**A) Ambas as funções exibirão: 'Seu crédito foi aprovado. Saldo disponível: 400.'** (CORRETA)
 
 B) analisarCredito1() exibirá: 'Seu crédito foi negado. Saldo disponível: -600.', enquanto analisarCredito2() exibirá: 'Seu crédito foi negado. Saldo disponível: -200.'
 
@@ -137,7 +137,7 @@ Qual das seguintes alternativas melhor descreve o comportamento do código?
 
 A) O código verifica se a idade indica um adulto ou um idoso e exibe a mensagem correspondente.
 
-**B) O código verifica se a idade pertence à faixa adulta. Se for, exibe "Você é um adulto!". Caso contrário, verifica se é menor de idade e exibe "Você é menor de idade!". Se nenhuma das condições anteriores for verdadeira, exibe "Você está na melhor idade!".**
+**B) O código verifica se a idade pertence à faixa adulta. Se for, exibe "Você é um adulto!". Caso contrário, verifica se é menor de idade e exibe "Você é menor de idade!". Se nenhuma das condições anteriores for verdadeira, exibe "Você está na melhor idade!".** (CORRETA)
 
 C) O código verifica se a idade está entre 18 e 60 anos e, se for, imprime "Você é um adulto!". Se não estiver nesse intervalo, imprime "Você está na melhor idade!".
 
@@ -224,6 +224,9 @@ Dispositivo 4 não pode ser ligado. Energia insuficiente.
 **Dispositivo 4 não pode ser ligado. Energia insuficiente.**
 
 **Dispositivo 5 não pode ser ligado. Energia insuficiente.**
+
+(CORRETA)
+
 ---
 
 **5)** Qual é a principal função do método update() em um jogo desenvolvido com Phaser.js?
@@ -232,7 +235,7 @@ Escolha a opção que melhor descreve seu propósito:
 
 A) O método update() é responsável por carregar os assets do jogo antes da cena ser exibida.
 
-**B) O método update() é chamado continuamente a cada quadro (frame) do jogo, sendo usado para atualizar a lógica,movimentação e interações dos objetos na cena.**
+**B) O método update() é chamado continuamente a cada quadro (frame) do jogo, sendo usado para atualizar a lógica,movimentação e interações dos objetos na cena.** (CORRETA)
 
 C) O método update() renderiza todos os sprites na tela e garante que a física do jogo seja processada corretamente.
 
@@ -244,7 +247,7 @@ D) O método update() é chamado apenas uma vez após a criação da cena, sendo
 
 Escolha a opção que responde corretamente:
 
-**A) Simular física avançada, incluindo corpos rígidos, colisões complexas e interação entre objetos com gravidade e forças.**
+**A) Simular física avançada, incluindo corpos rígidos, colisões complexas e interação entre objetos com gravidade e forças.** (CORRETA)
 
 B) Gerenciar eventos de entrada do usuário, como cliques e toques na tela, permitindo movimentação de personagens.
 
